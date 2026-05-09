@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -10,75 +9,65 @@ namespace ct.ActionBlocks
         [System.Serializable]
         public struct QueueItem
         {
-            public DirectorWrapMode queueWrapMode;
             public bool immediatelyCompleteIfBlockingQueue;
             public ActionBlockSequence sequence;
-            public Action onCompleteAction;
         }
 
         public int queueMax = 1;
-        public List<QueueItem> currentQueue = new List<QueueItem>();
+        public List<QueueItem> currentQueue = new();
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             currentQueue.Clear();
         }
 
-        public void Update()
+        public virtual void Update()
         {
-            if (currentQueue.Count == 0) return;
-
             while (currentQueue.Count > queueMax)
             {
-                //if (!currentSequence.isAlive) BuildSequence();
-                //CompleteCurrentSequence();
-                Pop();
+                var currentItem = currentQueue[0];
+                if (currentItem.sequence.IsValid() && !currentItem.sequence.IsComplete())
+                    currentItem.sequence.ForceComplete(gameObject, Time.deltaTime);
+                currentQueue.RemoveAt(0);
             }
 
             if (currentQueue.Count == 0) return;
             
-            switch (currentQueue[0].queueWrapMode)
+            if (currentQueue.Count > 1 && currentQueue[0].immediatelyCompleteIfBlockingQueue)
             {
-                case DirectorWrapMode.Hold:
-                case DirectorWrapMode.Loop:
-                    if (currentQueue.Count == 1) return;
-                    break;
+                var currentItem = currentQueue[0];
+                if (currentItem.sequence.IsValid() && !currentItem.sequence.IsComplete())
+                    currentItem.sequence.ForceComplete(gameObject, Time.deltaTime);
+                currentQueue.RemoveAt(0);
             }
-
-            if ((currentQueue.Count > 1 && currentQueue[0].immediatelyCompleteIfBlockingQueue))
+            else
             {
-                //CompleteCurrentSequence();
-                Pop();
+                var currentItem = currentQueue[0];
+                currentItem.sequence.Update(gameObject, Time.deltaTime);
+                if (currentItem.sequence.IsComplete())
+                    currentQueue.RemoveAt(0);
+                else currentQueue[0] = currentItem;
             }
         }
 
-        public virtual void Enqueue(ActionBlockSequence sequence, DirectorWrapMode queueWrapMode,
-            bool immediatelyEndIfBlockingQueue, Action onCompleteAction = null)
+        public virtual void Enqueue(ActionBlockSequence sequence, bool immediatelyEndIfBlockingQueue)
         {
-            currentQueue.Add(new QueueItem()
-            {
-                queueWrapMode = queueWrapMode,
-                sequence = sequence,
-                immediatelyCompleteIfBlockingQueue = immediatelyEndIfBlockingQueue,
-                onCompleteAction = onCompleteAction
-            });
-
-            //if (currentQueue.Count == 1) BuildSequence();
+            currentQueue.Add(
+                new QueueItem()
+                {
+                    sequence = sequence,
+                    immediatelyCompleteIfBlockingQueue = immediatelyEndIfBlockingQueue
+                });
         }
 
-        public virtual void Pop()
-        {
-            if(currentQueue.Count == 0) return;
-            currentQueue.RemoveAt(0);
-            //if (currentQueue.Count > 0) BuildSequence();
-        }
-
-        public virtual void PopAll()
+        public virtual void ForceCompleteQueue()
         {
             while (currentQueue.Count > 0)
             {
-                // Execute & End blocks
-                Pop();
+                var currentItem = currentQueue[0];
+                if (currentItem.sequence.IsValid() && !currentItem.sequence.IsComplete())
+                    currentItem.sequence.ForceComplete(gameObject, Time.deltaTime);
+                currentQueue.RemoveAt(0);
             }
         }
     }

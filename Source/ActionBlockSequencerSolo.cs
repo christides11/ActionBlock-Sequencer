@@ -6,10 +6,9 @@ namespace ct.ActionBlocks
 {
     public class ActionBlockSequencerSolo : MonoBehaviour
     {
-        [SerializeReference, SubclassSelector]
-        public List<ActionBlockBase> actionList = new List<ActionBlockBase>();
+        private ActionBlockSequence runningSequence;
         
-        protected ActionBlockSequence sequence;
+        [SerializeField] protected ActionBlockSequence sequence;
 
         public bool playOnAwake;
 
@@ -20,27 +19,36 @@ namespace ct.ActionBlocks
 
         public virtual void Update()
         {
-            if (sequence.IsValid() && !sequence.IsComplete())
+            if (runningSequence.IsValid() && !runningSequence.IsComplete())
             {
-                sequence.Update(gameObject, Time.deltaTime);
+                runningSequence.Update(gameObject, Time.deltaTime);
             }
         }
 
         public virtual void Execute()
         {
-            if (sequence.IsValid() && !sequence.IsComplete())
+            if (runningSequence.IsValid() && !runningSequence.IsComplete())
             {
-                sequence.ForceComplete(gameObject, Time.fixedDeltaTime);
+                runningSequence.ForceComplete(gameObject, Time.fixedDeltaTime);
             }
 
-            sequence = new ActionBlockSequence()
+            runningSequence = new ActionBlockSequence()
             {
-                actionList = actionList.ToArray(),
+                actionList = sequence.actionList,
                 currentIndex = 0,
                 blockTimer = 0,
-                timer = 0
+                timer = 0,
+                onCompleteAction = sequence.onCompleteAction
             };
-            sequence.Update(gameObject, Time.deltaTime);
+            runningSequence.Update(gameObject, Time.deltaTime);
+        }
+
+        public virtual void ForceComplete()
+        {
+            if (runningSequence.IsValid() && !runningSequence.IsComplete())
+            {
+                runningSequence.ForceComplete(gameObject, Time.fixedDeltaTime);
+            }
         }
     }
 }

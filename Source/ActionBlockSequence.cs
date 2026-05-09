@@ -8,11 +8,13 @@ namespace ct.ActionBlocks
     public struct ActionBlockSequence
     {
         public int id;
+        [SerializeReference, SubclassSelector]
         public ActionBlockBase[] actionList;
         public int currentIndex;
         public float timer;
         public float blockTimer;
         public float deltaTime;
+        public Action onCompleteAction;
         
         public void Reset()
         {
@@ -35,6 +37,14 @@ namespace ct.ActionBlocks
                 currentIndex++;
                 blockTimer = 0;
             }
+            
+            if (IsComplete())
+            {
+                onCompleteAction?.Invoke();
+                Debug.Log("Complete");
+                return;
+            }
+            
             timer += deltaTime;
             blockTimer += deltaTime;
         }
@@ -50,6 +60,7 @@ namespace ct.ActionBlocks
                 currentIndex++;
                 blockTimer = 0;
             }
+            onCompleteAction?.Invoke();
         }
 
         public bool IsValid()

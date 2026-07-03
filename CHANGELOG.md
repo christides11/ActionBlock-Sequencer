@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/christides11/ActionBlock-Sequencer/compare/v1.1.0...v1.1.1) (2026-07-03)
+
+
+### Bug Fixes
+
+* Play PlayableDirector with given asset ([5a9662e](https://github.com/christides11/ActionBlock-Sequencer/commit/5a9662e4000e488e97a42fb9eb1c3081611c21ff))
+
 # [1.1.0](https://github.com/christides11/ActionBlock-Sequencer/compare/v1.0.0...v1.1.0) (2026-05-09)
 
 

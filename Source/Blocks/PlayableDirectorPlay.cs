@@ -12,7 +12,8 @@ namespace ct.ActionBlocks.Blocks
         
         public override bool Execute(GameObject gameObject, ref ActionBlockSequence sequence)
         {
-            director.Play(asset);
+            if (asset == null) director.Play();
+            else director.Play(asset);
             return true;
         }
     }

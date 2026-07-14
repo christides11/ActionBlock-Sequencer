@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/christides11/ActionBlock-Sequencer/compare/v1.2.0...v1.2.1) (2026-07-14)
+
+
+### Bug Fixes
+
+* Fix SetActiveState ([47c9303](https://github.com/christides11/ActionBlock-Sequencer/commit/47c930317324ebf8cf3e2dae4f9cd0e4ed1f8f70))
+
 # [1.2.0](https://github.com/christides11/ActionBlock-Sequencer/compare/v1.1.1...v1.2.0) (2026-07-14)
 
 

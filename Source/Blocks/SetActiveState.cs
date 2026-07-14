@@ -9,7 +9,7 @@ namespace ct.ActionBlocks.Blocks
         public GameObject gameObject;
         public bool activeState = true;
         
-        public override bool Execute(GameObject gameObject, ref ActionBlockSequence sequence)
+        public override bool Execute(GameObject go, ref ActionBlockSequence sequence)
         {
             gameObject.SetActive(activeState);
             return true;

@@ -41,7 +41,6 @@ namespace ct.ActionBlocks
             if (IsComplete())
             {
                 onCompleteAction?.Invoke();
-                Debug.Log("Complete");
                 return;
             }
             

@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/christides11/ActionBlock-Sequencer/compare/v1.2.1...v1.2.2) (2026-07-28)
+
+
+### Bug Fixes
+
+* Remove Complete log ([5f6caa8](https://github.com/christides11/ActionBlock-Sequencer/commit/5f6caa8679975653ee6e05a6ec0a7ebb025fafb2))
+
 ## [1.2.1](https://github.com/christides11/ActionBlock-Sequencer/compare/v1.2.0...v1.2.1) (2026-07-14)
 
 
